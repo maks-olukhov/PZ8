@@ -19,6 +19,13 @@ def create_demo_data():
         'Прикладная математика',
     ]
 
+    category = [
+        'Первая категория',
+        'Вторая категория',
+        'Третья категория',
+    ]
+
+
     departments = {}
     for name in department_names:
         department, _ = Department.objects.get_or_create(name=name)
