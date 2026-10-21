@@ -5,11 +5,12 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 import django
 django.setup()
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model  # Используем фабрику для получения модели пользователя
 from accounts.models import Department, AcademicGroup, Course, StudentProfile
 
 
 def create_demo_data():
+    User = get_user_model()
     department_names = [
         'Информационные технологии',
         'Прикладная физика',
@@ -120,5 +121,20 @@ def create_demo_data():
     print('Демонстрационные данные добавлены.')
 
 
+def create_admin_if_not_exists():
+    User = get_user_model()
+    username = os.getenv('ADMIN_USERNAME', 'admin')
+    password = os.getenv('ADMIN_PASSWORD')
+    email = os.getenv('ADMIN_EMAIL', 'admin@example.com')
+    
+    if password and not User.objects.filter(username=username).exists():
+        print(f"Административная процедура: создание суперпользователя {username}...")
+        User.objects.create_superuser(username=username, email=email, password=password)
+        print("Суперпользователь успешно создан.")
+    elif not password:
+        print("Внимание: Переменная ADMIN_PASSWORD не задана. Суперпользователь не создан.")
+
+
 if __name__ == '__main__':
     create_demo_data()
+    create_admin_if_not_exists()
