@@ -32,3 +32,13 @@ urlpatterns = [
     path("", include("tickets.urls")),
 ]
 
+from django.http import JsonResponse
+ 
+def healthz(request):
+    return JsonResponse({"status": "ok"})
+ 
+urlpatterns = [
+    path("healthz/", healthz),
+    path("admin/", admin.site.urls),
+    path("", include("tickets.urls")),
+]
