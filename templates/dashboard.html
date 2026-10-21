@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Дашборды{% endblock %}
+
+{% block content %}
+<h1 class="mb-2">Дашборды</h1>
+<p class="text-secondary mb-4">Статистика автоматически считается по данным из базы сайта.</p>
+
+<div class="row g-3 mb-4">
+    {% include 'components/stat_card.html' with title='Студентов' value=total_students %}
+    {% include 'components/stat_card.html' with title='Факультетов' value=total_departments %}
+    {% include 'components/stat_card.html' with title='Групп' value=total_groups %}
+    {% include 'components/stat_card.html' with title='Курсов' value=total_courses %}
+</div>
+
+<div class="row g-3">
+    {% include 'components/chart_card.html' with title='Группы по факультетам' chart_id='groupsChart' %}
+    {% include 'components/chart_card.html' with title='Курсы по факультетам' chart_id='coursesChart' %}
+    {% include 'components/chart_card.html' with title='Студенты по факультетам' chart_id='studentsChart' %}
+
+    {% include 'components/chart_card.html' with title='Студенты по учебным группам' chart_id='groupStudentsChart' column_class='col-12 col-lg-6' %}
+    {% include 'components/chart_card.html' with title='Популярность курсов' chart_id='courseStudentsChart' column_class='col-12 col-lg-6' %}
+</div>
+
+{{ department_names|json_script:"department-names" }}
+{{ groups_count|json_script:"groups-count" }}
+{{ courses_count|json_script:"courses-count" }}
+{{ students_count|json_script:"students-count" }}
+{{ group_names|json_script:"group-names" }}
+{{ group_students_count|json_script:"group-students-count" }}
+{{ course_names|json_script:"course-names" }}
+{{ course_students_count|json_script:"course-students-count" }}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const departmentNames = JSON.parse(document.getElementById('department-names').textContent);
+    const groupsCount = JSON.parse(document.getElementById('groups-count').textContent);
+    const coursesCount = JSON.parse(document.getElementById('courses-count').textContent);
+    const studentsCount = JSON.parse(document.getElementById('students-count').textContent);
+    const groupNames = JSON.parse(document.getElementById('group-names').textContent);
+    const groupStudentsCount = JSON.parse(document.getElementById('group-students-count').textContent);
+    const courseNames = JSON.parse(document.getElementById('course-names').textContent);
+    const courseStudentsCount = JSON.parse(document.getElementById('course-students-count').textContent);
+
+    new Chart(document.getElementById('groupsChart'), {
+        type: 'bar',
+        data: {
+            labels: departmentNames,
+            datasets: [{
+                label: 'Количество групп',
+                data: groupsCount,
+                backgroundColor: '#206bc4'
+            }]
+        }
+    });
+
+    new Chart(document.getElementById('coursesChart'), {
+        type: 'doughnut',
+        data: {
+            labels: departmentNames,
+            datasets: [{
+                label: 'Количество курсов',
+                data: coursesCount,
+                backgroundColor: ['#2fb344', '#f59f00', '#d63939', '#6f42c1', '#4299e1']
+            }]
+        }
+    });
+
+    new Chart(document.getElementById('studentsChart'), {
+        type: 'bar',
+        data: {
+            labels: departmentNames,
+            datasets: [{
+                label: 'Количество студентов',
+                data: studentsCount,
+                backgroundColor: '#4299e1'
+            }]
+        }
+    });
+
+    new Chart(document.getElementById('groupStudentsChart'), {
+        type: 'bar',
+        data: {
+            labels: groupNames,
+            datasets: [{
+                label: 'Студентов в группе',
+                data: groupStudentsCount,
+                backgroundColor: '#2fb344'
+            }]
+        },
+        options: {
+            indexAxis: 'y'
+        }
+    });
+
+    new Chart(document.getElementById('courseStudentsChart'), {
+        type: 'bar',
+        data: {
+            labels: courseNames,
+            datasets: [{
+                label: 'Записано студентов',
+                data: courseStudentsCount,
+                backgroundColor: '#f59f00'
+            }]
+        },
+        options: {
+            indexAxis: 'y'
+        }
+    });
+</script>
+{% endblock %}

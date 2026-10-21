@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Курсы{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Курсы</h1>
+
+    {% if is_methodist %}
+    <a class="btn btn-primary" href="{% url 'courses_create' %}">Добавить курс</a>
+    {% endif %}
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-vcenter card-table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Название</th>
+                    <th>Факультет</th>
+                    <th>Описание</th>
+                    {% if is_methodist %}<th>Действия</th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                <tr>
+                    <td>{{ course.id }}</td>
+                    <td>{{ course.title }}</td>
+                    <td>{{ course.department.name }}</td>
+                    <td>{{ course.description }}</td>
+                    {% if is_methodist %}
+                    <td>
+                        <a class="btn btn-sm btn-warning" href="{% url 'courses_update' course.id %}">Изменить</a>
+                        <a class="btn btn-sm btn-danger" href="{% url 'courses_delete' course.id %}">Удалить</a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

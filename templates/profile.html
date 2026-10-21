@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Профиль{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Профиль пользователя</h1>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <p>Имя пользователя: <strong>{{ user.username }}</strong></p>
+
+        <p class="mb-0">
+            Статус:
+            {% if user.is_superuser %}
+                <span class="badge bg-red-lt">Администратор</span>
+            {% else %}
+                <span class="badge bg-blue-lt">Пользователь</span>
+            {% endif %}
+
+            {% if is_methodist %}
+                <span class="badge bg-green-lt">Методист</span>
+            {% endif %}
+        </p>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-12 col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h3>Факультеты</h3>
+                <p>Просмотр списка факультетов.</p>
+                <a class="btn btn-primary" href="{% url 'department_list' %}">Открыть</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h3>Группы</h3>
+                <p>Просмотр учебных групп.</p>
+                <a class="btn btn-primary" href="{% url 'academic_group_list' %}">Открыть</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h3>Курсы</h3>
+                <p>Просмотр списка курсов.</p>
+                <a class="btn btn-primary" href="{% url 'courses_list' %}">Открыть</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
