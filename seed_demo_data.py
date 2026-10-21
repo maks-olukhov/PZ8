@@ -7,7 +7,7 @@ django.setup()
 
 from django.contrib.auth import get_user_model  # Используем фабрику для получения модели пользователя
 from accounts.models import Department, AcademicGroup, Course, StudentProfile
-
+from tickets.models import Category 
 
 def create_demo_data():
     User = get_user_model()
@@ -17,12 +17,6 @@ def create_demo_data():
         'Экономика',
         'Дизайн',
         'Прикладная математика',
-    ]
-
-    category = [
-        'Первая категория',
-        'Вторая категория',
-        'Третья категория',
     ]
 
 
@@ -140,8 +134,26 @@ def create_admin_if_not_exists():
         print("Суперпользователь успешно создан.")
     elif not password:
         print("Внимание: Переменная ADMIN_PASSWORD не задана. Суперпользователь не создан.")
+def create_ticket_categories():
+    """Безопасная административная процедура создания категорий тикетов"""
+    categories_list = [
+        'Техническая поддержка',
+        'Проблемы с доступом / Пароли',
+        'Академические вопросы',
+        'Оплата обучения',
+        'Хозяйственные нужды / Администрация',
+    ]
+    
+    print("Административная процедура: создание категорий тикетов...")
+    for cat_name in categories_list:
+        # Метод get_or_create гарантирует, что дубликаты не создадутся при повторном деплое
+        category, created = Category.objects.get_or_create(name=cat_name)
+        if created:
+            print(f"Категория '{cat_name}' успешно создана.")
+    print("Проверка категорий завершена.")
 
 
 if __name__ == '__main__':
     create_demo_data()
     create_admin_if_not_exists()
+    create_ticket_categories()
